@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const http = require("http");
 
 const connectDB = require("./src/configs/db.config");
