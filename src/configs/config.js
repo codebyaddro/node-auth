@@ -4,9 +4,9 @@ if (!process.env.MONGODB_URI) {
     throw new Error("MONGODB_URI is not defined in environment variables");
 }
 
-// if (!process.env.JWT_SECRET) {
-//     throw new Error("JWT_SECRET is not defined in environment variables");
-// }
+if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 // if (!process.env.GOOGLE_CLIENT_ID) {
 //     throw new Error("GOOGLE_CLIENT_ID is not defined in environment variables");

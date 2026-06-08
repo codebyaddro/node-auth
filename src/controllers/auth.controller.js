@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+const config = require("../configs/config");
 
 /**
  * - Register new user
@@ -16,6 +16,7 @@ const register = async (req, res) => {
                 { email }
             ],
         });
+
         if (existingUser) {
             return res.status(409).json({ message: "username or email already exists" });
         }
@@ -30,6 +31,16 @@ const register = async (req, res) => {
 
         await user.save();
 
+        const token = jwt.sign(
+            {
+                id: user._id,
+            },
+            config.JWT_SECRET,
+            {
+                expiresIn: "1d",
+            }
+        );
+
         res.status(201).json({ 
             success: true,
             message: "User registered successfully",
@@ -38,6 +49,7 @@ const register = async (req, res) => {
                 username: user.username,
                 email: user.email,
             },
+            token
         });
     } catch (error) {
         res.status(500).json({
