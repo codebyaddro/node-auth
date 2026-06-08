@@ -4,6 +4,8 @@ const OTP = require("../models/otp.model");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const config = require("../configs/config");
+const sendEmail = require("../services/email.service");
+const { generateOtp, getOtpHtml } = require("../utils/utils");
 
 /**
  * - Register new user
@@ -35,7 +37,7 @@ const register = async (req, res) => {
         const html = getOtpHtml(otp);
 
         const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
-        await otpModel.create({
+        await OTP.create({
             email,
             user: user._id,
             otpHash
@@ -75,11 +77,11 @@ const login = async (req, res) => {
             })
         }
 
-        // if (!user.verified) {
-        //     return res.status(401).json({
-        //         message: "Email not verified"
-        //     })
-        // }
+        if (!user.verified) {
+            return res.status(401).json({
+                message: "Email not verified"
+            })
+        }
 
         const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
 
